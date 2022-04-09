@@ -4,13 +4,10 @@ Stack-based VM and compiler.
 
 Demo project, not intended for production use.
 
-## Build Instructions
+## Usage
 
-For now, `clang` it.
-
-`clang -Wall src/tokenizer.c`
-
-More to come.
+* `make`
+* `./stax example/add.stax`
 
 ## Goals
 

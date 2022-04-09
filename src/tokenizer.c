@@ -1,7 +1,9 @@
-#include <stdlib.h>
-#include <stdio.h>
 #include <stdbool.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
+
+#include "str_util.h"
 
 const int MAX_LINE_LENGTH = 2048;
 const int MAX_TOKENS = 2048;
@@ -11,40 +13,6 @@ enum token {
 	RIGHT_PAREN,
 	COMMA,
 };
-
-bool is_whitespace(char c) {
-	switch (c) {
-		case ' ':
-		case '\n':
-		case '\t':
-			return true;
-	}
-	return false;
-}
-
-bool is_alphanum(char c) {
-	return (c >= '0' && c <= '9') ||
-		(c >= 'a' && c <= 'z') ||
-		(c >= 'A' && c <= 'Z');
-}
-
-void inline_to_lower(char* text) {
-	for (char* c = text; *c != '\0'; c++) {
-		if (*c >= 'A' && *c <= 'Z') {
-			*c = *c + 'a' - 'A';
-		}
-	}
-}
-
-char* read_consecutive_alphanum(const char* input) {
-	const char* end;
-	for (end = input; is_alphanum(*end); end++) {}
-	const size_t len = end - input;
-
-	char* copy = malloc(len);
-	memcpy(copy, input, len);
-	return copy;
-}
 
 int tokenize_line(enum token* tokens, int max_len, const char* line) {
 	printf("tokenizing: %s", line);
@@ -57,7 +25,7 @@ int tokenize_line(enum token* tokens, int max_len, const char* line) {
 		if (is_whitespace(c)) {
 			// skip
 		} else if (is_alphanum(c)) {
-			char* t = read_consecutive_alphanum(next_char);
+			char* t = scan_alphanum(next_char);
 			inline_to_lower(t);
 			printf("found token: %s\n", t);
 			next_char += strlen(t) - 1;
@@ -98,7 +66,7 @@ void tokenize_file(enum token* tokens, int max_len, char* filename) {
 
 int main(int argc, char* argv[]) {
 	if (argc < 2) {
-		printf("path to stax source file expected as a command-line argument");
+		printf("path to stax source file expected as a command-line argument\n");
 		exit(1);
 	}
 
