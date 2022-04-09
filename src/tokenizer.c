@@ -9,10 +9,13 @@ const int MAX_LINE_LENGTH = 2048;
 const int MAX_TOKENS = 2048;
 
 enum token_type {
-	VALUE,
-	LEFT_PAREN,
-	RIGHT_PAREN,
-	COMMA,
+	TOKEN_VALUE,
+	TOKEN_LEFT_PAREN,
+	TOKEN_RIGHT_PAREN,
+	TOKEN_COMMA,
+	TOKEN_INT32,
+	TOKEN_ADD,
+	TOKEN_EMIT,
 };
 
 struct token {
@@ -50,16 +53,23 @@ int tokenize_line(struct token* tokens, int max_len, const char* line) {
 			char* t = scan_alphanum(next_char);
 			inline_to_lower(t);
 
-			printf("found token: %s\n", t);
-			add_token(tokens, token_index++, VALUE, t);
+			if (strcmp(t, "int32") == 0) {
+				add_token(tokens, token_index++, TOKEN_INT32, t);
+			} else if (strcmp(t, "add") == 0) {
+				add_token(tokens, token_index++, TOKEN_ADD, t);
+			} else if (strcmp(t, "emit") == 0) {
+				add_token(tokens, token_index++, TOKEN_EMIT, t);
+			} else {
+				add_token(tokens, token_index++, TOKEN_VALUE, t);
+			}
 
 			next_char += strlen(t) - 1;
 		} else if (c == '(') {
-			add_token(tokens, token_index++, LEFT_PAREN, NULL);
+			add_token(tokens, token_index++, TOKEN_LEFT_PAREN, NULL);
 		} else if (c == ')') {
-			add_token(tokens, token_index++, RIGHT_PAREN, NULL);
+			add_token(tokens, token_index++, TOKEN_RIGHT_PAREN, NULL);
 		} else if (c == ',') {
-			add_token(tokens, token_index++, COMMA, NULL);
+			add_token(tokens, token_index++, TOKEN_COMMA, NULL);
 		} else {
 			printf("unexpected token: %c\n", *next_char);
 			exit(1);
