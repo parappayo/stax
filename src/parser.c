@@ -43,21 +43,54 @@ struct stax_instruction {
 	struct stax_data data;
 };
 
+enum stax_parser_state {
+	STATE_ROOT,
+	STATE_PARSING_INT32,
+};
+
+void parse_value(
+		enum stax_parser_state state,
+		struct stax_instruction* dest,
+		const struct stax_token* src) {
+
+	dest->type = INSTR_PUSH;
+
+	switch (state) {
+		case STATE_PARSING_INT32:
+			dest->data.type = STAX_INT32;
+			dest->data.as_int32 = atoi(src->text);
+			printf("found int32 with value %d\n", dest->data.as_int32);
+			break;
+
+		default:
+			printf("invalid parser state: value has no type\n");
+			exit(1);
+	}
+}
+
 uint64_t parse_tokens(
 		struct stax_instruction* instructions,
 		const int instructions_size,
 		struct stax_token* tokens,
 		const int token_count) {
 	uint64_t instruction_count = 0;
+	enum stax_parser_state state = STATE_ROOT;
+
 	for (const struct stax_token* t = tokens; (t - tokens) < token_count; ) {
 		switch (t->type) {
 			case TOKEN_VALUE:
-				printf("parsing value: %s\n", t->text);
+				parse_value(state, instructions + instruction_count, t);
+				instruction_count++;
 				break;
 
 			case TOKEN_LEFT_BRACKET:
+				printf("unexpected left bracket\n");
+				exit(1);
+				break;
+
 			case TOKEN_RIGHT_BRACKET:
-				printf("parsing bracket\n");
+				// TODO: ensure the state is one of the data parsing states
+				state = STATE_ROOT;
 				break;
 
 			case TOKEN_COMMA:
@@ -65,7 +98,20 @@ uint64_t parse_tokens(
 				break;
 
 			case TOKEN_INT32:
-				printf("parsing int32\n");
+				{
+					const int tokens_left = token_count - (t - tokens);
+					printf("tokens left = %d\n", tokens_left);
+					if (tokens_left < 3) {
+						printf("unexpected end of input\n");
+						exit(1);
+					}
+					t++;
+					if (t->type != TOKEN_LEFT_BRACKET) {
+						printf("expected left bracket after data type\n");
+						exit(1);
+					}
+					state = STATE_PARSING_INT32;
+				}
 				break;
 
 			case TOKEN_ADD:
