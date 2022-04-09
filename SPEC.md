@@ -29,6 +29,8 @@ As a [BNF grammar](https://en.wikipedia.org/wiki/Backus%E2%80%93Naur_form):
 <data-value> := alpha-numeric text
 ```
 
+The above BNF is just a sketch for now, might get more formal later.
+
 
 ## Memory Model
 
@@ -62,6 +64,9 @@ The following types are available.
 * int64
 * float32
 * float64
+* type
+
+Type is implemented as an enum under the hood (or will be.)
 
 ### Refrence Types
 
@@ -81,12 +86,14 @@ The VM is to accept the following instructions.
 
 ### Stack Manipulation
 
-These basically come from Forth.
+Borrows some from Forth.
 
 * dup `( a -- a a )` - duplicates the top value
 * drop `( a -- )` - remove the top value
 * depth `( -- a )` - adds the number of elements on the stack to the top of the stack
 * swap `( a b -- b a )` - transposes the top two values
+* assert `( a b c -- )` - halt with error message a if the values b and c are not equal
+* convert `( a b --  c)` - changes data type of value a to type b
 
 ### Heap Manipulation
 
