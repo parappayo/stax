@@ -10,22 +10,22 @@ const int MAX_LINE_LENGTH = 2048;
 const int MAX_TOKENS = 2048;
 
 void add_token(
-		struct token* tokens,
+		struct stax_token* tokens,
 		int token_index,
-		enum token_type type,
+		enum stax_token_type type,
 		char* text) {
-	struct token* t = &tokens[token_index];
+	struct stax_token* t = &tokens[token_index];
 	t->type = type;
 	t->text = text;
 }
 
-void free_tokens(struct token* tokens, int count) {
+void free_tokens(struct stax_token* tokens, int count) {
 	for (int i = 0; i < count; i++) {
 		free(tokens[i].text);
 	}
 }
 
-int tokenize_line(struct token* tokens, int max_len, const char* line) {
+int tokenize_line(struct stax_token* tokens, int max_len, const char* line) {
 	printf("tokenizing: %s", line);
 
 	int token_index = 0;
@@ -67,7 +67,7 @@ int tokenize_line(struct token* tokens, int max_len, const char* line) {
 	return token_index;
 }
 
-int tokenize_file(struct token* tokens, int max_len, char* filename) {
+int tokenize_file(struct stax_token* tokens, int max_len, char* filename) {
 	int token_count = 0;
 	char line[MAX_LINE_LENGTH];
 	FILE* infile = fopen(filename, "r");

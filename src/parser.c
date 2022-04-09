@@ -46,10 +46,10 @@ struct stax_instruction {
 uint64_t parse_tokens(
 		struct stax_instruction* instructions,
 		const int instructions_size,
-		struct token* tokens,
+		struct stax_token* tokens,
 		const int token_count) {
 	uint64_t instruction_count = 0;
-	for (const struct token* t = tokens; (t - tokens) < token_count; ) {
+	for (const struct stax_token* t = tokens; (t - tokens) < token_count; ) {
 		switch (t->type) {
 			case TOKEN_VALUE:
 				printf("parsing value: %s\n", t->text);
@@ -92,7 +92,7 @@ int main(int argc, char* argv[]) {
 		exit(1);
 	}
 
-	struct token tokens[MAX_TOKENS];
+	struct stax_token tokens[MAX_TOKENS];
 	printf("sizeof(tokens) = %zu\n", sizeof(tokens));
 	int token_count = tokenize_file(tokens, MAX_TOKENS, argv[1]);
 	printf("token count = %d\n", token_count);
