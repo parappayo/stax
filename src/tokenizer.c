@@ -8,13 +8,35 @@
 const int MAX_LINE_LENGTH = 2048;
 const int MAX_TOKENS = 2048;
 
-enum token {
+enum token_type {
+	VALUE,
 	LEFT_PAREN,
 	RIGHT_PAREN,
 	COMMA,
 };
 
-int tokenize_line(enum token* tokens, int max_len, const char* line) {
+struct token {
+	enum token_type type;
+	char* text;
+};
+
+void add_token(
+		struct token* tokens,
+		int token_index,
+		enum token_type type,
+		char* text) {
+	struct token* t = &tokens[token_index];
+	t->type = type;
+	t->text = text;
+}
+
+void free_tokens(struct token* tokens, int count) {
+	for (int i = 0; i < count; i++) {
+		free(tokens[i].text);
+	}
+}
+
+int tokenize_line(struct token* tokens, int max_len, const char* line) {
 	printf("tokenizing: %s", line);
 
 	int token_index = 0;
@@ -27,19 +49,17 @@ int tokenize_line(enum token* tokens, int max_len, const char* line) {
 		} else if (is_alphanum(c)) {
 			char* t = scan_alphanum(next_char);
 			inline_to_lower(t);
+
 			printf("found token: %s\n", t);
+			add_token(tokens, token_index++, VALUE, t);
+
 			next_char += strlen(t) - 1;
-			// TODO: instead of freeing here, we need to add a token to the list here
-			free(t);
 		} else if (c == '(') {
-			printf("found left paren\n");
-			tokens[token_index++] = LEFT_PAREN;
+			add_token(tokens, token_index++, LEFT_PAREN, NULL);
 		} else if (c == ')') {
-			printf("found right paren\n");
-			tokens[token_index++] = RIGHT_PAREN;
+			add_token(tokens, token_index++, RIGHT_PAREN, NULL);
 		} else if (c == ',') {
-			printf("found comma paren\n");
-			tokens[token_index++] = COMMA;
+			add_token(tokens, token_index++, COMMA, NULL);
 		} else {
 			printf("unexpected token: %c\n", *next_char);
 			exit(1);
@@ -51,17 +71,20 @@ int tokenize_line(enum token* tokens, int max_len, const char* line) {
 	return token_index;
 }
 
-void tokenize_file(enum token* tokens, int max_len, char* filename) {
-	int token_index = 0;
+int tokenize_file(struct token* tokens, int max_len, char* filename) {
+	int token_count = 0;
 	char line[MAX_LINE_LENGTH];
 	FILE* infile = fopen(filename, "r");
+
 	while (fgets(line, sizeof(line), infile) != NULL) {
-		token_index += tokenize_line(
-			tokens + token_index,
-			max_len - token_index,
+		token_count += tokenize_line(
+			tokens + token_count,
+			max_len - token_count,
 			line);
 	}
-	fclose(infile);	
+	fclose(infile);
+
+	return token_count;
 }
 
 int main(int argc, char* argv[]) {
@@ -70,7 +93,9 @@ int main(int argc, char* argv[]) {
 		exit(1);
 	}
 
-	enum token tokens[MAX_TOKENS];
+	struct token tokens[MAX_TOKENS];
 	printf("sizeof(tokens) = %zu\n", sizeof(tokens));
-	tokenize_file(tokens, MAX_TOKENS, argv[1]);
+	int token_count = tokenize_file(tokens, MAX_TOKENS, argv[1]);
+
+	free_tokens(tokens, token_count);
 }
