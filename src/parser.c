@@ -4,49 +4,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "parser.h"
 #include "tokenizer.h"
-
-enum stax_data_type {
-	STAX_BYTE,
-	STAX_INT32,
-	STAX_INT64,
-	STAX_UINT32,
-	STAX_UINT64,
-	STAX_FLOAT_32,
-	STAX_FLOAT_64,
-	STAX_TYPE,
-};
-
-enum stax_instruction_type {
-	INSTR_PUSH,
-	INSTR_ADD,
-	INSTR_EMIT,
-};
-
-struct stax_data {
-	enum stax_data_type type;
-
-	union {
-		int8_t as_byte;
-		int16_t as_int16;
-		int32_t as_int32;
-		int64_t as_int64;
-		uint16_t as_uint16;
-		uint32_t as_uint32;
-		uint64_t as_uint64;
-		// TODO: type
-	};
-};
-
-struct stax_instruction {
-	enum stax_instruction_type type;
-	struct stax_data data;
-};
-
-enum stax_parser_state {
-	STATE_ROOT,
-	STATE_PARSING_INT32,
-};
 
 void parse_value(
 		enum stax_parser_state state,
@@ -68,12 +27,12 @@ void parse_value(
 	}
 }
 
-uint64_t parse_tokens(
+int parse_tokens(
 		struct stax_instruction* instructions,
 		const int instructions_size,
-		struct stax_token* tokens,
+		const struct stax_token* tokens,
 		const int token_count) {
-	uint64_t instruction_count = 0;
+	int instruction_count = 0;
 	enum stax_parser_state state = STATE_ROOT;
 
 	for (const struct stax_token* t = tokens; (t - tokens) < token_count; ) {
@@ -115,11 +74,21 @@ uint64_t parse_tokens(
 				break;
 
 			case TOKEN_ADD:
-				printf("parsing add\n");
+				{
+					struct stax_instruction* i = &instructions[instruction_count];
+					i->type = INSTR_ADD;
+					i->data.type = STAX_VOID;
+					i->data.as_int64 = 0;
+				}
 				break;
 
 			case TOKEN_EMIT:
-				printf("parsing emit\n");
+				{
+					struct stax_instruction* i = &instructions[instruction_count];
+					i->type = INSTR_EMIT;
+					i->data.type = STAX_VOID;
+					i->data.as_int64 = 0;
+				}
 				break;
 
 			default:
@@ -132,22 +101,8 @@ uint64_t parse_tokens(
 	return instruction_count;
 }
 
-int main(int argc, char* argv[]) {
-	if (argc < 2) {
-		printf("path to stax source file expected as a command-line argument\n");
-		exit(1);
-	}
-
-	struct stax_token tokens[MAX_TOKENS];
-	printf("sizeof(tokens) = %zu\n", sizeof(tokens));
-	int token_count = tokenize_file(tokens, MAX_TOKENS, argv[1]);
-	printf("token count = %d\n", token_count);
-
-	const int MAX_INSTRUCTIONS = 4096;
-	struct stax_instruction instructions[MAX_INSTRUCTIONS];
-	printf("sizeof(instructions) = %zu\n", sizeof(instructions));
-	uint64_t instruction_count = parse_tokens(instructions, MAX_INSTRUCTIONS, tokens, token_count);
-	printf("instruction count = %lu\n", instruction_count);
-
-	free_tokens(tokens, token_count);
+void free_instructions(
+		struct stax_instruction* instructions,
+		const int instruction_count) {
+	// for now, nothing to do
 }
