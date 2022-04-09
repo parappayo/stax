@@ -37,14 +37,12 @@ void inline_to_lower(char* text) {
 }
 
 char* read_consecutive_alphanum(const char* input) {
-	const char* end_char = input;
-	while (is_alphanum(*end_char)) {
-		end_char++;
-	}
+	const char* end;
+	for (end = input; is_alphanum(*end); end++) {}
+	const size_t len = end - input;
 
-	const size_t size = end_char - input;
-	char* copy = malloc(size);
-	memcpy(copy, input, size);
+	char* copy = malloc(len);
+	memcpy(copy, input, len);
 	return copy;
 }
 
