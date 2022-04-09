@@ -61,6 +61,7 @@ int tokenize_line(enum token* tokens, int max_len, const char* line) {
 			inline_to_lower(t);
 			printf("found token: %s\n", t);
 			next_char += strlen(t) - 1;
+			// TODO: instead of freeing here, we need to add a token to the list here
 			free(t);
 		} else if (c == '(') {
 			printf("found left paren\n");
