@@ -1,2 +1,6 @@
+*.exe
+*.obj
+*.o
 a.out
+stax
 
