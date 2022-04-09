@@ -28,6 +28,14 @@ bool is_alphanum(char c) {
 		(c >= 'A' && c <= 'Z');
 }
 
+void inline_to_lower(char* text) {
+	for (char* c = text; *c != '\0'; c++) {
+		if (*c >= 'A' && *c <= 'Z') {
+			*c = *c + 'a' - 'A';
+		}
+	}
+}
+
 char* read_consecutive_alphanum(const char* input) {
 	const char* end_char = input;
 	while (is_alphanum(*end_char)) {
@@ -52,6 +60,7 @@ int tokenize_line(enum token* tokens, int max_len, const char* line) {
 			// skip
 		} else if (is_alphanum(c)) {
 			char* t = read_consecutive_alphanum(next_char);
+			inline_to_lower(t);
 			printf("found token: %s\n", t);
 			next_char += strlen(t) - 1;
 			free(t);
