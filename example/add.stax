@@ -1,3 +1,2 @@
-int32(1, 2)
-ADD
+int32{1, 2} add
 emit

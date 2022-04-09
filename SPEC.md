@@ -18,13 +18,15 @@ As a [BNF grammar](https://en.wikipedia.org/wiki/Backus%E2%80%93Naur_form):
 
 <instruction-list> := <instruction> <EOL> <instruction-list> | <instruction> | ""
 
-<data> := <data-type> "(" <data-value> ")"
+<instruction> := see list below
+
+<data> := <data-type> "(" <data-value-list> ")"
 
 <data-type> := see list below
 
-<instruction> := see list below
+<data-value-list> := <data-value> "," <data-value-list> | <data-value> | ""
 
-<type> := see list below
+<data-value> := alpha-numeric text
 ```
 
 
@@ -33,7 +35,23 @@ As a [BNF grammar](https://en.wikipedia.org/wiki/Backus%E2%80%93Naur_form):
 The VM has a stack and a heap. The sizes of these are implementation-defined.
 
 
-## Data Format
+## Data Types
+
+Stax code is explicit about what type of data is being pushed to the stack. Consider the following Forth-like code:
+
+```
+1 2 add emit
+```
+
+Simple enough, but what data format are those integers? 32-bit, 64-bit, string, float, Decimal, BigInt, other? Stax syntax requires the user to specify this:
+
+```
+int32{ 1, 2 } add emit
+```
+
+It is inefficient, but the type info is also added to the stack along with the data. This allows the interpreter to halt when incompatible types are detected.
+
+For simplicity, all value types are 64 bits wide, reference types contain a pointer to the value on the heap.
 
 The following types are available.
 
@@ -73,6 +91,8 @@ These basically come from Forth.
 ### Heap Manipulation
 
 See: [PEEK and POKE](https://en.wikipedia.org/wiki/PEEK_and_POKE)
+
+Note: peek will need to know what type it is reading, either this is a stack arg or it is part of the instruction.
 
 * peek `( a -- b )` - reads a value from the heap
 * poke `( a -- )` - writes a value to the heap

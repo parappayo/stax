@@ -4,24 +4,10 @@
 #include <string.h>
 
 #include "str_util.h"
+#include "tokenizer.h"
 
 const int MAX_LINE_LENGTH = 2048;
 const int MAX_TOKENS = 2048;
-
-enum token_type {
-	TOKEN_VALUE,
-	TOKEN_LEFT_PAREN,
-	TOKEN_RIGHT_PAREN,
-	TOKEN_COMMA,
-	TOKEN_INT32,
-	TOKEN_ADD,
-	TOKEN_EMIT,
-};
-
-struct token {
-	enum token_type type;
-	char* text;
-};
 
 void add_token(
 		struct token* tokens,
@@ -64,10 +50,10 @@ int tokenize_line(struct token* tokens, int max_len, const char* line) {
 			}
 
 			next_char += strlen(t) - 1;
-		} else if (c == '(') {
-			add_token(tokens, token_index++, TOKEN_LEFT_PAREN, NULL);
-		} else if (c == ')') {
-			add_token(tokens, token_index++, TOKEN_RIGHT_PAREN, NULL);
+		} else if (c == '{') {
+			add_token(tokens, token_index++, TOKEN_LEFT_BRACKET, NULL);
+		} else if (c == '}') {
+			add_token(tokens, token_index++, TOKEN_RIGHT_BRACKET, NULL);
 		} else if (c == ',') {
 			add_token(tokens, token_index++, TOKEN_COMMA, NULL);
 		} else {
@@ -95,17 +81,4 @@ int tokenize_file(struct token* tokens, int max_len, char* filename) {
 	fclose(infile);
 
 	return token_count;
-}
-
-int main(int argc, char* argv[]) {
-	if (argc < 2) {
-		printf("path to stax source file expected as a command-line argument\n");
-		exit(1);
-	}
-
-	struct token tokens[MAX_TOKENS];
-	printf("sizeof(tokens) = %zu\n", sizeof(tokens));
-	int token_count = tokenize_file(tokens, MAX_TOKENS, argv[1]);
-
-	free_tokens(tokens, token_count);
 }
