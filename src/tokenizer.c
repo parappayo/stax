@@ -73,7 +73,8 @@ int tokenize_line(enum token* tokens, int max_len, const char* line) {
 			printf("found comma paren\n");
 			tokens[token_index++] = COMMA;
 		} else {
-			printf("unexpected char: %c\n", *next_char);
+			printf("unexpected token: %c\n", *next_char);
+			exit(1);
 		}
 		next_char++;
 	}
@@ -97,7 +98,8 @@ void tokenize_file(enum token* tokens, int max_len, char* filename) {
 
 int main(int argc, char* argv[]) {
 	if (argc < 2) {
-		exit(0);
+		printf("path to stax source file expected as a command-line argument");
+		exit(1);
 	}
 
 	enum token tokens[MAX_TOKENS];
