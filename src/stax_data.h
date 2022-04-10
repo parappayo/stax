@@ -9,8 +9,8 @@ enum stax_data_type {
 	STAX_INT64,
 	STAX_UINT32,
 	STAX_UINT64,
-	STAX_FLOAT_32,
-	STAX_FLOAT_64,
+	STAX_FLOAT,
+	STAX_DOUBLE,
 	STAX_TYPE,
 };
 
@@ -25,6 +25,8 @@ struct stax_data {
 		uint16_t as_uint16;
 		uint32_t as_uint32;
 		uint64_t as_uint64;
+		float as_float;
+		double as_double;
 		// TODO: type
 	};
 };

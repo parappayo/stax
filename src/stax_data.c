@@ -12,8 +12,8 @@ const char* stax_data_type_to_string(enum stax_data_type data_type) {
 		case STAX_INT64:     return "int64";
 		case STAX_UINT32:    return "uint32";
 		case STAX_UINT64:    return "uint64";
-		case STAX_FLOAT_32:  return "float_32";
-		case STAX_FLOAT_64:  return "float_64";
+		case STAX_FLOAT:     return "float";
+		case STAX_DOUBLE:    return "double";
 		case STAX_TYPE:      return "type";
 	}
 

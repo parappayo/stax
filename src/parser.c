@@ -14,8 +14,8 @@ enum stax_parser_state {
 	STATE_PARSING_INT64,
 	STATE_PARSING_UINT32,
 	STATE_PARSING_UINT64,
-	STATE_PARSING_FLOAT32,
-	STATE_PARSING_FLOAT64,
+	STATE_PARSING_FLOAT,
+	STATE_PARSING_DOUBLE,
 };
 
 void parse_value(
@@ -25,15 +25,42 @@ void parse_value(
 
 	dest->type = STAX_INSTR_PUSH;
 
+	char* str_end;
+	const int base = 10;
+
 	switch (state) {
 		case STATE_PARSING_INT32:
 			dest->data.type = STAX_INT32;
-			dest->data.as_int32 = atoi(src->text);
-			printf("found int32 with value %d\n", dest->data.as_int32);
+			dest->data.as_int32 = (int32_t) strtol(src->text, &str_end, base);
+			break;
+
+		case STATE_PARSING_INT64:
+			dest->data.type = STAX_INT64;
+			dest->data.as_int64 = strtol(src->text, &str_end, base);
+			break;
+
+		case STATE_PARSING_UINT32:
+			dest->data.type = STAX_UINT32;
+			dest->data.as_uint32 = (uint32_t) strtoul(src->text, &str_end, base);
+			break;
+
+		case STATE_PARSING_UINT64:
+			dest->data.type = STAX_UINT64;
+			dest->data.as_uint64 = strtol(src->text, &str_end, base);
+			break;
+
+		case STATE_PARSING_FLOAT:
+			dest->data.type = STAX_FLOAT;
+			dest->data.as_float = strtof(src->text, &str_end);
+			break;
+
+		case STATE_PARSING_DOUBLE:
+			dest->data.type = STAX_DOUBLE;
+			dest->data.as_double = strtod(src->text, &str_end);
 			break;
 
 		default:
-			printf("line %u invalid parser state: value has no type\n", src->line_number);
+			printf("line %u unrecognized data type %s\n", src->line_number, src->text);
 			exit(1);
 	}
 }
@@ -121,17 +148,17 @@ int parse_tokens(
 				}
 				break;
 
-			case TOKEN_FLOAT32:
+			case TOKEN_FLOAT:
 				{
 					check_start_of_value(t++, tokens, token_count);
-					state = STATE_PARSING_FLOAT32;
+					state = STATE_PARSING_FLOAT;
 				}
 				break;
 
-			case TOKEN_FLOAT64:
+			case TOKEN_DOUBLE:
 				{
 					check_start_of_value(t++, tokens, token_count);
-					state = STATE_PARSING_FLOAT64;
+					state = STATE_PARSING_DOUBLE;
 				}
 				break;
 

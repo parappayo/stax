@@ -66,8 +66,8 @@ The following types are available.
 * uint16
 * uint32
 * uint64
-* float32
-* float64
+* float
+* double
 * type
 
 Type is implemented as an enum under the hood (or will be.)

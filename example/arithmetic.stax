@@ -58,32 +58,32 @@ emit
 uint64{7, 2} mod
 emit
 
-float32{1, 2} add
+float{1, 2} add
 emit
 
-float32{2, 1} sub
+float{2, 1} sub
 emit
 
-float32{2, 3} mul
+float{2, 3} mul
 emit
 
-float32{6, 2} div
+float{6, 2} div
 emit
 
-float32{7, 2} mod
+float{7, 2} mod
 emit
 
-float64{1, 2} add
+double{1, 2} add
 emit
 
-float64{2, 1} sub
+double{2, 1} sub
 emit
 
-float64{2, 3} mul
+double{2, 3} mul
 emit
 
-float64{6, 2} div
+double{6, 2} div
 emit
 
-float64{7, 2} mod
+double{7, 2} mod
 emit
