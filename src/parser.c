@@ -33,7 +33,7 @@ void parse_value(
 			break;
 
 		default:
-			printf("invalid parser state: value has no type\n");
+			printf("line %u invalid parser state: value has no type\n", src->line_number);
 			exit(1);
 	}
 }
@@ -51,7 +51,7 @@ void check_start_of_value(
 	}
 
 	if ((current_token + 1)->type != TOKEN_LEFT_BRACKET) {
-		printf("expected left bracket after data type\n");
+		printf("line %u expected left bracket after data type\n", current_token->line_number);
 		exit(1);
 	}
 }
@@ -80,7 +80,7 @@ int parse_tokens(
 				break;
 
 			case TOKEN_LEFT_BRACKET:
-				printf("unexpected left bracket\n");
+				printf("line %u unexpected left bracket\n", t->line_number);
 				exit(1);
 				break;
 
@@ -90,47 +90,47 @@ int parse_tokens(
 				break;
 
 			case TOKEN_COMMA:
-				printf("parsing comma\n");
+				// TODO: ensure the state is one of the data parsing states
 				break;
 
 			case TOKEN_INT32:
 				{
-					check_start_of_value(t, tokens, token_count);
+					check_start_of_value(t++, tokens, token_count);
 					state = STATE_PARSING_INT32;
 				}
 				break;
 
 			case TOKEN_INT64:
 				{
-					check_start_of_value(t, tokens, token_count);
+					check_start_of_value(t++, tokens, token_count);
 					state = STATE_PARSING_INT64;
 				}
 				break;
 
 			case TOKEN_UINT32:
 				{
-					check_start_of_value(t, tokens, token_count);
+					check_start_of_value(t++, tokens, token_count);
 					state = STATE_PARSING_UINT32;
 				}
 				break;
 
 			case TOKEN_UINT64:
 				{
-					check_start_of_value(t, tokens, token_count);
+					check_start_of_value(t++, tokens, token_count);
 					state = STATE_PARSING_UINT64;
 				}
 				break;
 
 			case TOKEN_FLOAT32:
 				{
-					check_start_of_value(t, tokens, token_count);
+					check_start_of_value(t++, tokens, token_count);
 					state = STATE_PARSING_FLOAT32;
 				}
 				break;
 
 			case TOKEN_FLOAT64:
 				{
-					check_start_of_value(t, tokens, token_count);
+					check_start_of_value(t++, tokens, token_count);
 					state = STATE_PARSING_FLOAT64;
 				}
 				break;

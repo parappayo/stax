@@ -25,7 +25,8 @@ enum stax_token_type {
 struct stax_token {
 	enum stax_token_type type;
 	char* text;
+	unsigned int line_number;
 };
 
-int tokenize_file(struct stax_token* tokens, int max_len, char* filename);
+int tokenize_file(struct stax_token* tokens, int max_token_count, char* filename);
 void free_tokens(struct stax_token* tokens, int count);
