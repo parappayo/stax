@@ -2,39 +2,14 @@
 
 #include <stdint.h>
 
+#include "stax_data.h"
+
 struct stax_token;
 
-enum stax_data_type {
-	STAX_VOID,
-	STAX_BYTE,
-	STAX_INT32,
-	STAX_INT64,
-	STAX_UINT32,
-	STAX_UINT64,
-	STAX_FLOAT_32,
-	STAX_FLOAT_64,
-	STAX_TYPE,
-};
-
 enum stax_instruction_type {
-	INSTR_PUSH,
-	INSTR_ADD,
-	INSTR_EMIT,
-};
-
-struct stax_data {
-	enum stax_data_type type;
-
-	union {
-		int8_t as_byte;
-		int16_t as_int16;
-		int32_t as_int32;
-		int64_t as_int64;
-		uint16_t as_uint16;
-		uint32_t as_uint32;
-		uint64_t as_uint64;
-		// TODO: type
-	};
+	STAX_INSTR_PUSH,
+	STAX_INSTR_ADD,
+	STAX_INSTR_EMIT,
 };
 
 struct stax_instruction {

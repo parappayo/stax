@@ -12,7 +12,7 @@ void parse_value(
 		struct stax_instruction* dest,
 		const struct stax_token* src) {
 
-	dest->type = INSTR_PUSH;
+	dest->type = STAX_INSTR_PUSH;
 
 	switch (state) {
 		case STATE_PARSING_INT32:
@@ -76,18 +76,20 @@ int parse_tokens(
 			case TOKEN_ADD:
 				{
 					struct stax_instruction* i = &instructions[instruction_count];
-					i->type = INSTR_ADD;
+					i->type = STAX_INSTR_ADD;
 					i->data.type = STAX_VOID;
 					i->data.as_int64 = 0;
+					instruction_count++;
 				}
 				break;
 
 			case TOKEN_EMIT:
 				{
 					struct stax_instruction* i = &instructions[instruction_count];
-					i->type = INSTR_EMIT;
+					i->type = STAX_INSTR_EMIT;
 					i->data.type = STAX_VOID;
 					i->data.as_int64 = 0;
+					instruction_count++;
 				}
 				break;
 

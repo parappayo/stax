@@ -32,7 +32,10 @@ int main(int argc, char* argv[]) {
 
 	free_tokens(tokens, token_count);
 
-	stax_exec(instructions, instruction_count);
+	struct stax_state state;
+	stax_init_state(&state);
+	stax_exec(&state, instructions, instruction_count);
+	stax_free_state(&state);
 
 	free_instructions(instructions, instruction_count);
 }
