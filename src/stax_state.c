@@ -24,7 +24,7 @@ void stax_state_push(struct stax_state* state, const struct stax_data* data) {
 	state->top++;
 }
 
-const struct stax_data* stax_state_pop(struct stax_state* state) {
+struct stax_data* stax_state_pop(struct stax_state* state) {
 	if (state->top <= state->stack) {
 		printf("tried to pop empty stack\n");
 		exit(1);

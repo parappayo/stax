@@ -31,5 +31,6 @@ struct stax_data {
 	};
 };
 
+void stax_free_data(struct stax_data* data);
 const char* stax_data_type_to_string(enum stax_data_type data_type);
 void stax_print_data(const struct stax_data* data);

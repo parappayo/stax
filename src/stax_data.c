@@ -4,6 +4,10 @@
 
 #include "stax_data.h"
 
+void stax_free_data(struct stax_data* data) {
+	// TODO: handle reference types that need data cleaned up
+}
+
 const char* stax_data_type_to_string(enum stax_data_type data_type) {
 	switch (data_type) {
 		case STAX_VOID:      return "void";
