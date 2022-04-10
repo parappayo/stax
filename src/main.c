@@ -35,6 +35,7 @@ int main(int argc, char* argv[]) {
 	free_tokens(tokens, token_count);
 
 	struct stax_state state;
+	printf("sizeof(state) = %zu\n", sizeof(state));
 	stax_init_state(&state);
 	stax_exec(&state, instructions, instruction_count);
 	stax_free_state(&state);

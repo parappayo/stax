@@ -15,6 +15,8 @@ void stax_push(struct stax_state* state, const struct stax_data* data) {
 		exit(1);
 	}
 	*(state->top) = *data;
+	printf("pushed: ");
+	stax_print_data(state->top);
 	state->top++;
 }
 
@@ -23,9 +25,10 @@ const struct stax_data* stax_pop(struct stax_state* state) {
 		printf("tried to pop empty stack\n");
 		exit(1);
 	}
-	struct stax_data* result = state->top;
 	state->top--;
-	return result;
+	printf("popped: ");
+	stax_print_data(state->top);
+	return state->top;
 }
 
 void stax_exec(
@@ -42,14 +45,12 @@ void stax_exec(
 		switch (instr->type) {
 			case STAX_INSTR_PUSH:
 				{
-					printf("exec push\n");
 					stax_push(state, &instr->data);
 				}
 				break;
 
 			case STAX_INSTR_ADD:
 				{
-					printf("exec add\n");
 					const struct stax_data* a = stax_pop(state);
 					const struct stax_data* b = stax_pop(state);
 					// TODO: free a and b at the right time
