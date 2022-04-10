@@ -9,3 +9,5 @@ struct stax_state {
 
 void stax_init_state(struct stax_state* state);
 void stax_free_state(struct stax_state* state);
+void stax_state_push(struct stax_state* state, const struct stax_data* data);
+const struct stax_data* stax_state_pop(struct stax_state* state);
