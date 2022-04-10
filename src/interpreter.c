@@ -4,16 +4,10 @@
 
 #include "interpreter.h"
 #include "parser.h"
+#include "stax_instruction.h"
+#include "stax_state.h"
 
 const int STACK_SIZE = 4096;
-
-void stax_init_state(struct stax_state* state) {
-	state->top = state->stack;
-}
-
-void stax_free_state(struct stax_state* state) {
-	// do nothing
-}
 
 void stax_push(struct stax_state* state, const struct stax_data* data) {
 	if (state->top >= state->stack + STACK_SIZE) {
@@ -42,6 +36,9 @@ void stax_exec(
 	for (int i = 0; i < instruction_count; i++) {
 		const struct stax_instruction* instr = &instructions[i];
 
+		printf("executing: ");
+		stax_print_instruction(instr);
+
 		switch (instr->type) {
 			case STAX_INSTR_PUSH:
 				{
@@ -56,8 +53,18 @@ void stax_exec(
 					const struct stax_data* a = stax_pop(state);
 					const struct stax_data* b = stax_pop(state);
 					// TODO: free a and b at the right time
-					if (a->type != STAX_INT32 || b->type != STAX_INT32) {
-						printf("could not add, unsupported data type\n");
+
+					if (a->type != b->type) {
+						printf(
+							"could not add, types do not match: %s, %s\n",
+							stax_data_type_to_string(a->type),
+							stax_data_type_to_string(b->type));
+						exit(1);
+					}
+					if (a->type != STAX_INT32) {
+						printf(
+							"could not add, unsupported data type: %s\n",
+							stax_data_type_to_string(a->type));
 						exit(1);
 					}
 					int32_t result = a->as_int32 + b->as_int32;

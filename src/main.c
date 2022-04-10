@@ -6,6 +6,8 @@
 
 #include "interpreter.h"
 #include "parser.h"
+#include "stax_instruction.h"
+#include "stax_state.h"
 #include "tokenizer.h"
 
 /**

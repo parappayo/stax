@@ -2,20 +2,7 @@
 
 #include <stdint.h>
 
-#include "stax_data.h"
-
 struct stax_token;
-
-enum stax_instruction_type {
-	STAX_INSTR_PUSH,
-	STAX_INSTR_ADD,
-	STAX_INSTR_EMIT,
-};
-
-struct stax_instruction {
-	enum stax_instruction_type type;
-	struct stax_data data;
-};
 
 enum stax_parser_state {
 	STATE_ROOT,

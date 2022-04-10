@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "stax_instruction.h"
 #include "parser.h"
 #include "tokenizer.h"
 

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <stdint.h>
+
 enum stax_data_type {
 	STAX_VOID,
 	STAX_BYTE,
@@ -27,3 +29,5 @@ struct stax_data {
 	};
 };
 
+const char* stax_data_type_to_string(enum stax_data_type data_type);
+void stax_print_data(const struct stax_data* data);
