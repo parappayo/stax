@@ -4,7 +4,14 @@
 
 enum stax_instruction_type {
 	STAX_INSTR_PUSH,
+
+	// arithmetic
 	STAX_INSTR_ADD,
+	STAX_INSTR_SUB,
+	STAX_INSTR_MUL,
+	STAX_INSTR_DIV,
+	STAX_INSTR_MOD,
+
 	STAX_INSTR_EMIT,
 };
 

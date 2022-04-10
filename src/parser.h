@@ -4,11 +4,6 @@
 
 struct stax_token;
 
-enum stax_parser_state {
-	STATE_ROOT,
-	STATE_PARSING_INT32,
-};
-
 int parse_tokens(
 	struct stax_instruction* instructions,
 	const int instructions_size,

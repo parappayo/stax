@@ -7,10 +7,15 @@ const char* stax_instruction_type_to_string(enum stax_instruction_type instr_typ
 	switch (instr_type) {
 		case STAX_INSTR_PUSH:  return "push";
 		case STAX_INSTR_ADD:   return "add";
+		case STAX_INSTR_SUB:   return "sub";
+		case STAX_INSTR_MUL:   return "mul";
+		case STAX_INSTR_DIV:   return "div";
+		case STAX_INSTR_MOD:   return "mod";
 		case STAX_INSTR_EMIT:  return "emit";
-	}
 
-	return "unsupported";
+		default:
+			return "unsupported";
+	}
 }
 
 void stax_print_instruction(const struct stax_instruction* instr) {

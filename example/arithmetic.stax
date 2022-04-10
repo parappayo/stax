@@ -1,0 +1,89 @@
+int32{1, 2} add
+emit
+
+int32{2, 1} sub
+emit
+
+int32{2, 3} mul
+emit
+
+int32{6, 2} div
+emit
+
+int32{7, 2} mod
+emit
+
+uint32{1, 2} add
+emit
+
+uint32{2, 1} sub
+emit
+
+uint32{2, 3} mul
+emit
+
+uint32{6, 2} div
+emit
+
+uint32{7, 2} mod
+emit
+
+int64{1, 2} add
+emit
+
+int64{2, 1} sub
+emit
+
+int64{2, 3} mul
+emit
+
+int64{6, 2} div
+emit
+
+int64{7, 2} mod
+emit
+
+uint64{1, 2} add
+emit
+
+uint64{2, 1} sub
+emit
+
+uint64{2, 3} mul
+emit
+
+uint64{6, 2} div
+emit
+
+uint64{7, 2} mod
+emit
+
+float32{1, 2} add
+emit
+
+float32{2, 1} sub
+emit
+
+float32{2, 3} mul
+emit
+
+float32{6, 2} div
+emit
+
+float32{7, 2} mod
+emit
+
+float64{1, 2} add
+emit
+
+float64{2, 1} sub
+emit
+
+float64{2, 3} mul
+emit
+
+float64{6, 2} div
+emit
+
+float64{7, 2} mod
+emit

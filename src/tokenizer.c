@@ -9,6 +9,26 @@
 const int MAX_LINE_LENGTH = 2048;
 const int MAX_TOKENS = 2048;
 
+struct reserved_word_tuple {
+	const char* text;
+	enum stax_token_type token_type;
+};
+
+struct reserved_word_tuple reserved_words[] = {
+	{ "int32",    TOKEN_INT32 },
+	{ "int64",    TOKEN_INT64 },
+	{ "uint32",   TOKEN_UINT32 },
+	{ "uint64",   TOKEN_UINT64 },
+	{ "float32",  TOKEN_FLOAT32 },
+	{ "float64",  TOKEN_FLOAT64 },
+	{ "add",      TOKEN_ADD },
+	{ "sub",      TOKEN_SUB },
+	{ "mul",      TOKEN_MUL },
+	{ "div",      TOKEN_DIV },
+	{ "mod",      TOKEN_MOD },
+	{ "emit",     TOKEN_EMIT },
+};
+
 void add_token(
 		struct stax_token* tokens,
 		int token_index,
@@ -26,11 +46,10 @@ void free_tokens(struct stax_token* tokens, int count) {
 }
 
 int tokenize_line(struct stax_token* tokens, int max_len, const char* line) {
-	printf("tokenizing: %s", line);
+	int token_count = 0;
 
-	int token_index = 0;
 	const char* next_char = line;
-	while (*next_char != '\0' && token_index < max_len) {
+	while (*next_char != '\0' && token_count < max_len) {
 		const char c = *next_char;
 
 		if (is_whitespace(c)) {
@@ -39,23 +58,27 @@ int tokenize_line(struct stax_token* tokens, int max_len, const char* line) {
 			char* t = scan_alphanum(next_char);
 			inline_to_lower(t);
 
-			if (strcmp(t, "int32") == 0) {
-				add_token(tokens, token_index++, TOKEN_INT32, t);
-			} else if (strcmp(t, "add") == 0) {
-				add_token(tokens, token_index++, TOKEN_ADD, t);
-			} else if (strcmp(t, "emit") == 0) {
-				add_token(tokens, token_index++, TOKEN_EMIT, t);
-			} else {
-				add_token(tokens, token_index++, TOKEN_VALUE, t);
+			const int reserved_word_count = sizeof(reserved_words) / sizeof(struct reserved_word_tuple);
+			bool found_reserved_word = false;
+			for (int i = 0; i < reserved_word_count; i++) {
+				if (strcmp(t, reserved_words[i].text) == 0) {
+					add_token(tokens, token_count++, reserved_words[i].token_type, t);
+					found_reserved_word = true;
+					break;
+				}
+			}
+
+			if (!found_reserved_word) {
+				add_token(tokens, token_count++, TOKEN_VALUE, t);
 			}
 
 			next_char += strlen(t) - 1;
 		} else if (c == '{') {
-			add_token(tokens, token_index++, TOKEN_LEFT_BRACKET, NULL);
+			add_token(tokens, token_count++, TOKEN_LEFT_BRACKET, NULL);
 		} else if (c == '}') {
-			add_token(tokens, token_index++, TOKEN_RIGHT_BRACKET, NULL);
+			add_token(tokens, token_count++, TOKEN_RIGHT_BRACKET, NULL);
 		} else if (c == ',') {
-			add_token(tokens, token_index++, TOKEN_COMMA, NULL);
+			add_token(tokens, token_count++, TOKEN_COMMA, NULL);
 		} else {
 			printf("unexpected token: %c\n", *next_char);
 			exit(1);
@@ -63,8 +86,7 @@ int tokenize_line(struct stax_token* tokens, int max_len, const char* line) {
 		next_char++;
 	}
 
-	printf("found %d tokens\n", token_index);
-	return token_index;
+	return token_count;
 }
 
 int tokenize_file(struct stax_token* tokens, int max_len, char* filename) {

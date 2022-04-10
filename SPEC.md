@@ -121,6 +121,7 @@ Follows the C arithimetic operators.
 * sub `( a b -- c )` - c is `a - b`
 * mul `( a b -- c )` - c is `a * b`
 * div `( a b -- c )` - c is `a / b`
+* mod `( a b -- c )` - c is `a % b`
 
 ### Bitwise
 

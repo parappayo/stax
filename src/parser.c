@@ -8,6 +8,16 @@
 #include "parser.h"
 #include "tokenizer.h"
 
+enum stax_parser_state {
+	STATE_ROOT,
+	STATE_PARSING_INT32,
+	STATE_PARSING_INT64,
+	STATE_PARSING_UINT32,
+	STATE_PARSING_UINT64,
+	STATE_PARSING_FLOAT32,
+	STATE_PARSING_FLOAT64,
+};
+
 void parse_value(
 		enum stax_parser_state state,
 		struct stax_instruction* dest,
@@ -26,6 +36,32 @@ void parse_value(
 			printf("invalid parser state: value has no type\n");
 			exit(1);
 	}
+}
+
+void check_start_of_value(
+		const struct stax_token* current_token,
+		const struct stax_token* tokens,
+		const int token_count) {
+
+	const int tokens_left = token_count - (current_token - tokens);
+
+	if (tokens_left < 3) {
+		printf("unexpected end of input\n");
+		exit(1);
+	}
+
+	if ((current_token + 1)->type != TOKEN_LEFT_BRACKET) {
+		printf("expected left bracket after data type\n");
+		exit(1);
+	}
+}
+
+void set_non_value_instruction(
+		struct stax_instruction* instr,
+		enum stax_instruction_type instr_type) {
+	instr->type = instr_type;
+	instr->data.type = STAX_VOID;
+	instr->data.as_int64 = 0;
 }
 
 int parse_tokens(
@@ -59,39 +95,68 @@ int parse_tokens(
 
 			case TOKEN_INT32:
 				{
-					const int tokens_left = token_count - (t - tokens);
-					printf("tokens left = %d\n", tokens_left);
-					if (tokens_left < 3) {
-						printf("unexpected end of input\n");
-						exit(1);
-					}
-					t++;
-					if (t->type != TOKEN_LEFT_BRACKET) {
-						printf("expected left bracket after data type\n");
-						exit(1);
-					}
+					check_start_of_value(t, tokens, token_count);
 					state = STATE_PARSING_INT32;
 				}
 				break;
 
-			case TOKEN_ADD:
+			case TOKEN_INT64:
 				{
-					struct stax_instruction* i = &instructions[instruction_count];
-					i->type = STAX_INSTR_ADD;
-					i->data.type = STAX_VOID;
-					i->data.as_int64 = 0;
-					instruction_count++;
+					check_start_of_value(t, tokens, token_count);
+					state = STATE_PARSING_INT64;
 				}
 				break;
 
-			case TOKEN_EMIT:
+			case TOKEN_UINT32:
 				{
-					struct stax_instruction* i = &instructions[instruction_count];
-					i->type = STAX_INSTR_EMIT;
-					i->data.type = STAX_VOID;
-					i->data.as_int64 = 0;
-					instruction_count++;
+					check_start_of_value(t, tokens, token_count);
+					state = STATE_PARSING_UINT32;
 				}
+				break;
+
+			case TOKEN_UINT64:
+				{
+					check_start_of_value(t, tokens, token_count);
+					state = STATE_PARSING_UINT64;
+				}
+				break;
+
+			case TOKEN_FLOAT32:
+				{
+					check_start_of_value(t, tokens, token_count);
+					state = STATE_PARSING_FLOAT32;
+				}
+				break;
+
+			case TOKEN_FLOAT64:
+				{
+					check_start_of_value(t, tokens, token_count);
+					state = STATE_PARSING_FLOAT64;
+				}
+				break;
+
+			case TOKEN_ADD:
+				set_non_value_instruction(&instructions[instruction_count++], STAX_INSTR_ADD);
+				break;
+
+			case TOKEN_SUB:
+				set_non_value_instruction(&instructions[instruction_count++], STAX_INSTR_SUB);
+				break;
+
+			case TOKEN_MUL:
+				set_non_value_instruction(&instructions[instruction_count++], STAX_INSTR_MUL);
+				break;
+
+			case TOKEN_DIV:
+				set_non_value_instruction(&instructions[instruction_count++], STAX_INSTR_DIV);
+				break;
+
+			case TOKEN_MOD:
+				set_non_value_instruction(&instructions[instruction_count++], STAX_INSTR_MOD);
+				break;
+
+			case TOKEN_EMIT:
+				set_non_value_instruction(&instructions[instruction_count++], STAX_INSTR_EMIT);
 				break;
 
 			default:
