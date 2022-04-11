@@ -7,7 +7,8 @@ Demo project, not intended for production use.
 ## Usage
 
 * `make`
-* `./stax example/add.stax`
+* `./stax example/hello.stax`
+* `./stax example/arithmetic.stax`
 
 ## Goals
 

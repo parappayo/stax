@@ -19,7 +19,6 @@ void stax_state_push(struct stax_state* state, const struct stax_data* data) {
 		exit(1);
 	}
 	*(state->top) = *data;
-	stax_print_data(state->top);
 	state->top++;
 }
 
@@ -29,6 +28,5 @@ struct stax_data* stax_state_pop(struct stax_state* state) {
 		exit(1);
 	}
 	state->top--;
-	stax_print_data(state->top);
 	return state->top;
 }

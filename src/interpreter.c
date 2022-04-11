@@ -156,9 +156,6 @@ void stax_exec(
 	for (int i = 0; i < instruction_count; i++) {
 		const struct stax_instruction* instr = &instructions[i];
 
-		printf("executing: ");
-		stax_print_instruction(instr);
-
 		switch (instr->type) {
 			case STAX_INSTR_PUSH:
 				{
