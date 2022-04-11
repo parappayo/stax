@@ -72,7 +72,7 @@ The following types are available.
 
 Type is implemented as an enum under the hood (or will be.)
 
-### Refrence Types
+### Reference Types
 
 * string
 * bigint
