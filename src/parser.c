@@ -60,7 +60,7 @@ void parse_value(
 			break;
 
 		default:
-			printf("line %u unrecognized data type %s\n", src->line_number, src->text);
+			printf("error: line %u unrecognized data type %s\n", src->line_number, src->text);
 			exit(1);
 	}
 }
@@ -73,12 +73,12 @@ void check_start_of_value(
 	const int tokens_left = token_count - (current_token - tokens);
 
 	if (tokens_left < 3) {
-		printf("unexpected end of input\n");
+		printf("error: unexpected end of input\n");
 		exit(1);
 	}
 
 	if ((current_token + 1)->type != TOKEN_LEFT_BRACKET) {
-		printf("line %u expected left bracket after data type\n", current_token->line_number);
+		printf("error: line %u expected left bracket after data type\n", current_token->line_number);
 		exit(1);
 	}
 }
@@ -107,7 +107,7 @@ int parse_tokens(
 				break;
 
 			case TOKEN_LEFT_BRACKET:
-				printf("line %u unexpected left bracket\n", t->line_number);
+				printf("error: line %u unexpected left bracket\n", t->line_number);
 				exit(1);
 				break;
 
@@ -187,7 +187,7 @@ int parse_tokens(
 				break;
 
 			default:
-				printf("unrecognized token\n");
+				printf("error: unrecognized token\n");
 				exit(1);
 		}
 

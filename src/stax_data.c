@@ -47,6 +47,14 @@ void stax_print_data(const struct stax_data* data) {
 			printf(" %lu\n", data->as_uint64);
 			break;
 
+		case STAX_FLOAT:
+			printf(" %f\n", data->as_float);
+			break;
+
+		case STAX_DOUBLE:
+			printf(" %f\n", data->as_double);
+			break;
+
 		default:
 			printf(" unsupported\n");
 			break;

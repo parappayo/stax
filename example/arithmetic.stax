@@ -70,9 +70,6 @@ emit
 float{6, 2} div
 emit
 
-float{7, 2} mod
-emit
-
 double{1, 2} add
 emit
 
@@ -83,7 +80,4 @@ double{2, 3} mul
 emit
 
 double{6, 2} div
-emit
-
-double{7, 2} mod
 emit
