@@ -1,18 +1,18 @@
 
-string{"expected 1 + 2 = 3"}
-int32{3, 2, 1} add assert
+# string{expected 1 + 2 = 3}
+int32{3, 2, 1} add emit#assert
 
-string{"expected 2 - 1 = 1"}
-int32{1, 1, 2} sub assert
+#string{expected 2 - 1 = 1}
+int32{1, 1, 2} sub emit#assert
 
-string{"expected 1 - 2 = -1"}
-int32{-1, 2, 1} sub assert
+#string{expected 1 - 2 = -1}
+#int32{-1, 2, 1} sub emit#assert
 
-string{"expected max_uint + 1 = 0"}
-uint32{0, 1, max_uint} add assert
+#string{expected max_uint + 1 = 0}
+#uint32{0, 1, max_uint} add emit#assert
 
-string{"expected 0 - 1 = max_uint"}
-uint32{max_uint, 1, 0} sub assert
+#string{expected 0 - 1 = max_uint}
+#uint32{max_uint, 1, 0} sub emit#assert
 
 int32{2, 3} mul
 emit

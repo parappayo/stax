@@ -1,0 +1,32 @@
+int64{2, 1} sub
+emit
+
+int64{2, 3} mul
+emit
+
+int64{6, 2} div
+emit
+
+int64{7, 2} mod
+emit
+
+uint64{1, 2} add
+emit
+
+uint64{2, 1} sub
+emit
+
+uint64{2, 3} mul
+emit
+
+uint64{6, 2} div
+emit
+
+uint64{7, 2} mod
+emit
+
+float{1, 2} add
+emit
+
+float{2, 1} sub
+emit

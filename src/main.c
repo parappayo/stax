@@ -21,18 +21,22 @@ int main(int argc, char* argv[]) {
 		exit(1);
 	}
 
-	struct stax_token tokens[MAX_TOKENS];
-	printf("sizeof(tokens) = %zu\n", sizeof(tokens));
-	int token_count = tokenize_file(tokens, MAX_TOKENS, argv[1]);
+	struct tokenizer_state tokenizer;
+	init_tokenizer_state(&tokenizer);
+	int token_count = tokenize_file(&tokenizer, argv[1]);
 	printf("token count = %d\n", token_count);
 
 	const int MAX_INSTRUCTIONS = 4096;
 	struct stax_instruction instructions[MAX_INSTRUCTIONS];
 	printf("sizeof(instructions) = %zu\n", sizeof(instructions));
-	int instruction_count = parse_tokens(instructions, MAX_INSTRUCTIONS, tokens, token_count);
+	int instruction_count = parse_tokens(
+		instructions,
+		MAX_INSTRUCTIONS,
+		tokenizer.tokens,
+		token_count);
 	printf("instruction count = %d\n", instruction_count);
 
-	free_tokens(tokens, token_count);
+	free_tokenizer_state(&tokenizer);
 
 	struct stax_state state;
 	printf("sizeof(state) = %zu\n", sizeof(state));
