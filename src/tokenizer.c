@@ -32,7 +32,7 @@ struct reserved_word_tuple reserved_words[] = {
 void init_tokenizer_state(struct tokenizer_state* state) {
 	state->state_enum = STAX_TOKENIZER_STATE_NORMAL;
 	state->max_token_count = MAX_TOKENS;
-	state->tokens = malloc(state->max_token_count);
+	state->tokens = malloc(state->max_token_count * sizeof(struct stax_token));
 	state->next_token = state->tokens;
 }
 
