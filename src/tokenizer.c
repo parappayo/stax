@@ -50,8 +50,6 @@ void add_token(
 		exit(1);
 	}
 
-	printf("found token: %s\n", text);
-
 	struct stax_token* t = state->next_token++;
 	t->type = type;
 	t->text = text;
@@ -71,9 +69,8 @@ void tokenize_line(
 		const char* line,
 		unsigned int line_number) {
 
-	const char* next_char = line;
-	while (*next_char != '\0') {
-		const char c = *next_char;
+	while (*line != '\0') {
+		const char c = *line;
 
 		switch (state->state_enum) {
 			case STAX_TOKENIZER_STATE_NORMAL:
@@ -81,14 +78,14 @@ void tokenize_line(
 					if (is_whitespace(c)) {
 						// do nothing
 					} else if (is_alphanum(c)) {
-						char* t = scan_alphanum(next_char);
-						inline_to_lower(t);
+						char* text = scan_alphanum(line);
+						inline_to_lower(text);
 
 						const int reserved_word_count = sizeof(reserved_words) / sizeof(struct reserved_word_tuple);
 						bool found_reserved_word = false;
 						for (int i = 0; i < reserved_word_count; i++) {
-							if (strcmp(t, reserved_words[i].text) == 0) {
-								add_token(state, reserved_words[i].token_type, t, line_number);
+							if (strcmp(text, reserved_words[i].text) == 0) {
+								add_token(state, reserved_words[i].token_type, text, line_number);
 								found_reserved_word = true;
 								break;
 							}
@@ -96,10 +93,10 @@ void tokenize_line(
 
 						if (!found_reserved_word) {
 							// TODO: if this is not a valid value, put TOKEN_INVALID or die here
-							add_token(state, TOKEN_VALUE, t, line_number);
+							add_token(state, TOKEN_VALUE, text, line_number);
 						}
 
-						next_char += strlen(t) - 1;
+						line += strlen(text) - 1;
 					} else if (c == '{') {
 						add_token(state, TOKEN_LEFT_BRACKET, NULL, line_number);
 					} else if (c == '}') {
@@ -109,7 +106,7 @@ void tokenize_line(
 					} else if (c == '#') {
 						state->state_enum = STAX_TOKENIZER_STATE_COMMENT;
 					} else {
-						printf("line %u unexpected token: %c\n", line_number, *next_char);
+						printf("line %u unexpected token: %c\n", line_number, *line);
 						exit(1);
 					}
 				}
@@ -124,7 +121,7 @@ void tokenize_line(
 				break;
 		}
 
-		next_char++;
+		line++;
 	}
 }
 

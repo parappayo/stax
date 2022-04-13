@@ -32,8 +32,8 @@ char* scan_alphanum(const char* input) {
 	for (end = input; is_alphanum(*end); end++) {}
 	const size_t len = end - input;
 
-	char* copy = malloc(len);
+	char* copy = malloc(len + 1);
 	memcpy(copy, input, len);
+	copy[len] = '\0';
 	return copy;
 }
-

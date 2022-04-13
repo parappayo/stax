@@ -10,6 +10,12 @@ Demo project, not intended for production use.
 * `./stax example/hello.stax`
 * `./stax example/arithmetic.stax`
 
+Debug
+
+* `lldb stax`
+* `run example/arithmetic.stax`
+* `thread backtrace`
+
 ## Goals
 
 * Learn stuff
